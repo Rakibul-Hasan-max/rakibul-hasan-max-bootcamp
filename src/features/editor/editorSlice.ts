@@ -1,32 +1,140 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-interface EditorState {
-  elements: any[];
-  selectedElementId: string | null;
-  history: any[];
-  currentIndex: number;
-}
+import { EditorElement, DeviceMode, EditorState } from "./types";
+import { v4 as uuidv4 } from "uuid";
 
 const initialState: EditorState = {
-  elements: [],
+  elements: [
+    {
+      id: "__root",
+      type: "SECTION",
+      name: "Body",
+      styles: {
+        backgroundColor: "white",
+        minHeight: "100vh",
+      },
+      props: {},
+      children: [],
+    },
+  ],
   selectedElementId: null,
-  history: [],
-  currentIndex: -1,
+  deviceMode: "DESKTOP",
+  previewMode: false,
+  history: {
+    past: [],
+    present: [],
+    future: [],
+  },
 };
 
 export const editorSlice = createSlice({
   name: "editor",
   initialState,
   reducers: {
-    setElements: (state, action: PayloadAction<any[]>) => {
-      state.elements = action.payload;
+    addElement: (state, action: PayloadAction<{ parentId: string; element: EditorElement }>) => {
+      const { parentId, element } = action.payload;
+      
+      const addElementToParent = (elements: EditorElement[]): boolean => {
+        for (const el of elements) {
+          if (el.id === parentId) {
+            el.children.push(element);
+            return true;
+          }
+          if (el.children && addElementToParent(el.children)) {
+            return true;
+          }
+        }
+        return false;
+      };
+
+      // Save to history before mutation
+      state.history.past.push(JSON.parse(JSON.stringify(state.elements)));
+      state.history.future = [];
+
+      addElementToParent(state.elements);
     },
+
+    updateElement: (state, action: PayloadAction<{ id: string; updates: Partial<EditorElement> }>) => {
+      const { id, updates } = action.payload;
+
+      const updateInList = (elements: EditorElement[]): boolean => {
+        for (const el of elements) {
+          if (el.id === id) {
+            Object.assign(el, updates);
+            return true;
+          }
+          if (el.children && updateInList(el.children)) {
+            return true;
+          }
+        }
+        return false;
+      };
+
+      state.history.past.push(JSON.parse(JSON.stringify(state.elements)));
+      updateInList(state.elements);
+    },
+
+    deleteElement: (state, action: PayloadAction<string>) => {
+      const id = action.payload;
+      if (id === "__root") return;
+
+      const removeFromList = (elements: EditorElement[]): boolean => {
+        const index = elements.findIndex((el) => el.id === id);
+        if (index !== -1) {
+          elements.splice(index, 1);
+          return true;
+        }
+        for (const el of elements) {
+          if (el.children && removeFromList(el.children)) {
+            return true;
+          }
+        }
+        return false;
+      };
+
+      state.history.past.push(JSON.parse(JSON.stringify(state.elements)));
+      removeFromList(state.elements);
+      if (state.selectedElementId === id) state.selectedElementId = null;
+    },
+
     selectElement: (state, action: PayloadAction<string | null>) => {
       state.selectedElementId = action.payload;
     },
-    // More actions will be added when implementing the drag-and-drop logic
+
+    setDeviceMode: (state, action: PayloadAction<DeviceMode>) => {
+      state.deviceMode = action.payload;
+    },
+
+    setPreviewMode: (state, action: PayloadAction<boolean>) => {
+      state.previewMode = action.payload;
+    },
+
+    undo: (state) => {
+      const previous = state.history.past.pop();
+      if (previous) {
+        state.history.future.push(JSON.parse(JSON.stringify(state.elements)));
+        state.elements = previous;
+      }
+    },
+
+    redo: (state) => {
+      const next = state.history.future.pop();
+      if (next) {
+        state.history.past.push(JSON.parse(JSON.stringify(state.elements)));
+        state.elements = next;
+      }
+    },
   },
 });
 
-export const { setElements, selectElement } = editorSlice.actions;
+export const { 
+  addElement, 
+  updateElement, 
+  deleteElement, 
+  selectElement, 
+  setDeviceMode, 
+  setPreviewMode,
+  undo,
+  redo
+} = editorSlice.actions;
+
 export default editorSlice.reducer;
