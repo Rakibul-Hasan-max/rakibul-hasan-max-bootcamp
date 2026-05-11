@@ -16,13 +16,35 @@ import {
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { setDeviceMode, setPreviewMode, undo, redo } from "../../editorSlice";
+import { setDeviceMode, setPreviewMode, undo, redo, setElements } from "../../editorSlice";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { useParams } from "next/navigation";
+import { savePageContent } from "../../actions/editor-actions";
+import { toast } from "sonner";
+import { useState, useEffect } from "react";
+import { Loader2 } from "lucide-react";
 
 export const EditorNavbar = () => {
+  const params = useParams();
   const dispatch = useDispatch();
-  const { deviceMode, previewMode, history } = useSelector((state: RootState) => state.editor);
+  const { deviceMode, previewMode, history, elements } = useSelector((state: RootState) => state.editor);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const projectId = params.projectId as string;
+
+  const onSave = async () => {
+    setIsSaving(true);
+    try {
+      const res = await savePageContent(projectId, elements);
+      if (res.error) toast.error(res.error);
+      if (res.success) toast.success(res.success);
+    } catch (error) {
+      toast.error("An error occurred while saving");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <nav className="h-14 border-b flex items-center justify-between px-4 bg-background z-50">
@@ -94,6 +116,11 @@ export const EditorNavbar = () => {
         <Button variant="outline" size="sm" onClick={() => dispatch(setPreviewMode(!previewMode))}>
           {previewMode ? <Edit3 className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
           {previewMode ? "Edit" : "Preview"}
+        </Button>
+
+        <Button variant="outline" size="sm" onClick={onSave} disabled={isSaving}>
+          {isSaving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
+          Save
         </Button>
         
         <Button size="sm" className="bg-primary hover:bg-primary/90 text-white">

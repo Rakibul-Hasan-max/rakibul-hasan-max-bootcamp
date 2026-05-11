@@ -108,6 +108,11 @@ export const editorSlice = createSlice({
       state.previewMode = action.payload;
     },
 
+    setElements: (state, action: PayloadAction<EditorElement[]>) => {
+      state.elements = action.payload;
+      state.history.past = [];
+      state.history.future = [];
+    },
     undo: (state) => {
       const previous = state.history.past.pop();
       if (previous) {
@@ -133,6 +138,7 @@ export const {
   selectElement, 
   setDeviceMode, 
   setPreviewMode,
+  setElements,
   undo,
   redo
 } = editorSlice.actions;

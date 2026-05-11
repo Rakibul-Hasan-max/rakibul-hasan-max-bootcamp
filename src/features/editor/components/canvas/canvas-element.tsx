@@ -2,7 +2,7 @@
 
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { selectElement, deleteElement } from "../../editorSlice";
+import { selectElement, deleteElement, updateElement } from "../../editorSlice";
 import { cn } from "@/lib/utils";
 import { EditorElement } from "../../types";
 import { Trash2, Copy, Move } from "lucide-react";
@@ -29,20 +29,42 @@ export const CanvasElement = ({ element }: CanvasElementProps) => {
   };
 
   const renderContent = () => {
+    const commonStyles = {
+      ...element.styles,
+    };
+
     switch (element.type) {
       case "TEXT":
-        return <div className="p-4 text-black min-h-[1em] outline-none" contentEditable={!previewMode} suppressContentEditableWarning>{element.name}</div>;
+        return (
+          <div 
+            style={commonStyles}
+            className="p-4 outline-none" 
+            contentEditable={!previewMode} 
+            suppressContentEditableWarning
+            onBlur={(e) => {
+              dispatch(updateElement({
+                id: element.id,
+                updates: { name: e.currentTarget.innerText }
+              }));
+            }}
+          >
+            {element.name}
+          </div>
+        );
       case "BUTTON":
         return (
           <div className="p-4 flex justify-center">
-            <button className="px-6 py-2 bg-primary text-white rounded-md font-medium shadow-sm hover:opacity-90 transition-opacity">
+            <button 
+              style={commonStyles}
+              className="px-6 py-2 bg-primary text-white rounded-md font-medium shadow-sm hover:opacity-90 transition-opacity"
+            >
               {element.name}
             </button>
           </div>
         );
       case "IMAGE":
         return (
-          <div className="p-4">
+          <div className="p-4" style={commonStyles}>
              <div className="aspect-video bg-muted rounded-lg flex items-center justify-center border-2 border-dashed border-muted-foreground/20">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-10 w-10 text-muted-foreground/30"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
              </div>
@@ -50,7 +72,10 @@ export const CanvasElement = ({ element }: CanvasElementProps) => {
         );
       case "NAVBAR":
         return (
-          <div className="w-full border-b px-8 py-4 flex items-center justify-between bg-white text-black">
+          <div 
+            style={commonStyles}
+            className="w-full border-b px-8 py-4 flex items-center justify-between bg-white text-black"
+          >
             <div className="font-bold text-lg">Logo</div>
             <div className="flex gap-6 text-sm font-medium">
               <span>Home</span>
@@ -61,7 +86,10 @@ export const CanvasElement = ({ element }: CanvasElementProps) => {
         );
       case "SECTION":
         return (
-          <div className="w-full min-h-[200px] border-b border-dashed border-muted p-8 text-black bg-white">
+          <div 
+            style={commonStyles}
+            className="w-full min-h-[200px] border-b border-dashed border-muted p-8 text-black bg-white"
+          >
             {element.children.length === 0 && !previewMode && (
               <div className="h-32 border-2 border-dashed rounded-lg flex items-center justify-center text-muted-foreground/30 text-xs">
                 Drop elements here
@@ -73,7 +101,7 @@ export const CanvasElement = ({ element }: CanvasElementProps) => {
           </div>
         );
       default:
-        return <div className="p-4 border bg-white text-black">{element.name}</div>;
+        return <div style={commonStyles} className="p-4 border bg-white text-black">{element.name}</div>;
     }
   };
 

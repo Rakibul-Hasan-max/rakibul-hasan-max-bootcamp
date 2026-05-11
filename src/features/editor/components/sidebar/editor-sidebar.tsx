@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { DraggableElement } from "./draggable-element";
+import { LayersPanel } from "./layers-panel";
 
 export const EditorSidebar = () => {
   const [activeTab, setActiveTab] = useState("components");
@@ -100,7 +101,7 @@ export const EditorSidebar = () => {
         </TabsContent>
 
         <TabsContent value="layers" className="flex-1 overflow-auto p-4 m-0">
-          <p className="text-xs text-muted-foreground italic">Layer tree view coming soon...</p>
+          <LayersPanel />
         </TabsContent>
 
         <TabsContent value="templates" className="flex-1 overflow-auto p-4 m-0">
