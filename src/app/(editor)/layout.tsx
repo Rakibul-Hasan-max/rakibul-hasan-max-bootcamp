@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { 
   ChevronLeft, 
   Monitor, 
@@ -35,6 +36,9 @@ export default function EditorLayout({
               <ChevronLeft className="h-5 w-5" />
             </Link>
           </Button>
+          <div className="h-8 w-8 rounded-md bg-white/5 p-1">
+            <Image src="/icon.png" alt="Dragify" width={32} height={32} className="h-full w-full object-contain" />
+          </div>
           <div className="flex flex-col">
             <span className="text-sm font-medium leading-none">Home Page</span>
             <span className="text-[10px] text-gray-500">Draft • Last saved 2m ago</span>

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { 
   LayoutDashboard, 
@@ -47,6 +48,9 @@ const items = [
   },
 ];
 
+import { UserButton } from "@/features/auth/components/user-button";
+import { signOut } from "next-auth/react";
+
 export default function DashboardLayout({
   children,
 }: {
@@ -54,16 +58,17 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
 
+  const onLogout = () => {
+    signOut({ callbackUrl: "/login" });
+  };
+
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full bg-muted/30">
         <Sidebar className="border-r bg-background">
           <SidebarHeader className="h-16 flex items-center px-6 border-b">
             <Link href="/" className="flex items-center gap-2">
-              <div className="rounded-lg bg-primary p-1">
-                <LayoutIcon className="h-5 w-5 text-primary-foreground" />
-              </div>
-              <span className="text-lg font-bold font-outfit">Dragify</span>
+              <Image src="/logo.png" alt="Dragify" width={120} height={34} className="h-8 w-auto" />
             </Link>
           </SidebarHeader>
           <SidebarContent>
@@ -90,7 +95,11 @@ export default function DashboardLayout({
             </SidebarGroup>
           </SidebarContent>
           <SidebarFooter className="p-4 border-t">
-            <Button variant="ghost" className="w-full justify-start gap-2 text-muted-foreground hover:text-destructive">
+            <Button 
+              variant="ghost" 
+              className="w-full justify-start gap-2 text-muted-foreground hover:text-destructive"
+              onClick={onLogout}
+            >
               <LogOut className="h-4 w-4" />
               <span>Log out</span>
             </Button>
@@ -113,9 +122,7 @@ export default function DashboardLayout({
                 <HelpCircle className="h-4 w-4 mr-2" />
                 Support
               </Button>
-              <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary border border-primary/20">
-                JD
-              </div>
+              <UserButton />
             </div>
           </header>
           <div className="flex-1 p-6 overflow-auto">

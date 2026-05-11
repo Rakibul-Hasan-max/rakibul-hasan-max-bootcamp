@@ -9,6 +9,9 @@ const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 export const metadata: Metadata = {
   title: "Dragify | Modern Website Builder",
   description: "Create professional websites with ease using our drag-and-drop builder.",
+  icons: {
+    icon: "/icon.png",
+  },
 };
 
 export default function RootLayout({

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Layers, Layout, Zap } from "lucide-react";
 
@@ -7,12 +8,9 @@ export default function Home() {
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="rounded-lg bg-primary p-1">
-              <Layout className="h-6 w-6 text-primary-foreground" />
-            </div>
-            <span className="text-xl font-bold font-outfit">Dragify</span>
-          </div>
+          <Link href="/" className="flex items-center gap-2">
+            <Image src="/logo.png" alt="Dragify" width={140} height={40} className="h-9 w-auto" priority />
+          </Link>
           <nav className="hidden md:flex gap-6">
             <Link href="#features" className="text-sm font-medium hover:text-primary transition-colors">Features</Link>
             <Link href="#templates" className="text-sm font-medium hover:text-primary transition-colors">Templates</Link>
@@ -102,12 +100,9 @@ export default function Home() {
 
       <footer className="border-t py-12">
         <div className="container flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex items-center gap-2">
-            <div className="rounded-lg bg-primary p-1">
-              <Layout className="h-5 w-5 text-primary-foreground" />
-            </div>
-            <span className="text-lg font-bold font-outfit">Dragify</span>
-          </div>
+          <Link href="/" className="flex items-center gap-2">
+            <Image src="/logo.png" alt="Dragify" width={120} height={34} className="h-8 w-auto opacity-80 hover:opacity-100 transition-opacity" />
+          </Link>
           <p className="text-sm text-muted-foreground">
             © 2026 Dragify Inc. All rights reserved.
           </p>
