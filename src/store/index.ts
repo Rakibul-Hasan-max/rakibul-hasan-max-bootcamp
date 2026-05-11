@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import editorReducer from "@/features/editor/editorSlice";
+import projectReducer from "./project-slice";
 
 export const store = configureStore({
   reducer: {
     editor: editorReducer,
+    project: projectReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

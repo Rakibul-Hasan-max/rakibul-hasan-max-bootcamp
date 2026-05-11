@@ -30,10 +30,13 @@ export function truncate(str: string, length: number) {
  * Generates a URL-friendly slug from a string
  */
 export function generateSlug(text: string) {
-  return text
+  const slug = text
     .toLowerCase()
     .replace(/[^\w ]+/g, "")
     .replace(/ +/g, "-");
+  
+  const randomSuffix = Math.random().toString(36).substring(2, 7);
+  return `${slug}-${randomSuffix}`;
 }
 
 /**

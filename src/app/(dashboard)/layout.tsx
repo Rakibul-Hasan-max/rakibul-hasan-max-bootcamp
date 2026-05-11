@@ -38,12 +38,12 @@ const items = [
   },
   {
     title: "Projects",
-    url: "/dashboard/projects",
+    url: "/projects",
     icon: FolderKanban,
   },
   {
     title: "Settings",
-    url: "/dashboard/settings",
+    url: "/settings",
     icon: Settings,
   },
 ];

@@ -7,6 +7,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum ProjectStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -57,17 +63,37 @@ model VerificationToken {
 }
 
 model Project {
-  id          String   @id @default(cuid())
+  id          String        @id @default(cuid())
   name        String
   description String?
+  slug        String        @unique
+  thumbnail   String?
+  status      ProjectStatus @default(DRAFT)
+  published   Boolean       @default(false)
   userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  templateId  String?
+  template    Template?     @relation(fields: [templateId], references: [id])
   pages       Page[]
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  settings    Json?         // Project-wide settings like SEO, Custom Domain, etc.
+  isDeleted   Boolean       @default(false) // Soft delete support
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
   @@index([userId])
+  @@index([slug])
+}
+
+model Template {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  thumbnail   String?
+  category    String?   // Landing, Portfolio, SaaS, etc.
+  content     Json?     // Initial state for the editor
+  projects    Project[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Page {
