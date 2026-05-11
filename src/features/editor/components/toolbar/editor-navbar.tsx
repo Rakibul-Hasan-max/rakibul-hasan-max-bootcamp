@@ -47,86 +47,107 @@ export const EditorNavbar = () => {
   };
 
   return (
-    <nav className="h-14 border-b flex items-center justify-between px-4 bg-background z-50">
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
+    <nav className="h-12 border-b border-zinc-800 flex items-center justify-between px-4 bg-[#0d0d0d] z-50">
+      <div className="flex items-center gap-3">
+        <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-zinc-800 text-zinc-400" asChild>
           <Link href="/projects">
-            <ChevronLeft className="h-5 w-5" />
+            <ChevronLeft className="h-4 w-4" />
           </Link>
         </Button>
-        <div className="h-8 w-8 rounded-md bg-primary/10 p-1">
-          <Image src="/icon.png" alt="Dragify" width={32} height={32} className="h-full w-full object-contain" />
+        <div className="h-7 w-7 rounded bg-zinc-800 p-1">
+          <Image src="/icon.png" alt="Dragify" width={28} height={28} className="h-full w-full object-contain" />
         </div>
-        <div className="h-4 w-[1px] bg-border mx-2" />
-        <div className="flex flex-col">
-          <span className="text-sm font-medium leading-none">Home Page</span>
-          <span className="text-[10px] text-muted-foreground">Draft • Auto-saved</span>
+        <div className="flex flex-col ml-1">
+          <span className="text-[12px] font-semibold text-zinc-200 leading-none">Home Page</span>
+          <span className="text-[10px] text-zinc-500 mt-1">Draft • Last saved 2m ago</span>
         </div>
       </div>
 
-      <div className="flex items-center gap-2 bg-muted/50 p-1 rounded-lg">
+      <div className="flex items-center gap-1 bg-zinc-900/50 p-1 rounded-md border border-zinc-800">
         <Button
-          variant={deviceMode === "DESKTOP" ? "secondary" : "ghost"}
+          variant="ghost"
           size="icon"
-          className="h-8 w-8"
+          className={cn(
+            "h-7 w-7 hover:bg-zinc-800 transition-colors",
+            deviceMode === "DESKTOP" ? "bg-zinc-800 text-primary" : "text-zinc-500"
+          )}
           onClick={() => dispatch(setDeviceMode("DESKTOP"))}
         >
-          <Monitor className="h-4 w-4" />
+          <Monitor className="h-3.5 w-3.5" />
         </Button>
         <Button
-          variant={deviceMode === "TABLET" ? "secondary" : "ghost"}
+          variant="ghost"
           size="icon"
-          className="h-8 w-8"
+          className={cn(
+            "h-7 w-7 hover:bg-zinc-800 transition-colors",
+            deviceMode === "TABLET" ? "bg-zinc-800 text-primary" : "text-zinc-500"
+          )}
           onClick={() => dispatch(setDeviceMode("TABLET"))}
         >
-          <Tablet className="h-4 w-4" />
+          <Tablet className="h-3.5 w-3.5" />
         </Button>
         <Button
-          variant={deviceMode === "MOBILE" ? "secondary" : "ghost"}
+          variant="ghost"
           size="icon"
-          className="h-8 w-8"
+          className={cn(
+            "h-7 w-7 hover:bg-zinc-800 transition-colors",
+            deviceMode === "MOBILE" ? "bg-zinc-800 text-primary" : "text-zinc-500"
+          )}
           onClick={() => dispatch(setDeviceMode("MOBILE"))}
         >
-          <Smartphone className="h-4 w-4" />
+          <Smartphone className="h-3.5 w-3.5" />
         </Button>
       </div>
 
-      <div className="flex items-center gap-2">
-        <div className="flex items-center gap-1 mr-4">
+      <div className="flex items-center gap-3">
+        <div className="flex items-center gap-0.5 bg-zinc-900/50 p-1 rounded-md border border-zinc-800 mr-2">
           <Button 
             variant="ghost" 
             size="icon" 
-            className="h-8 w-8" 
+            className="h-7 w-7 hover:bg-zinc-800 text-zinc-400" 
             onClick={() => dispatch(undo())}
             disabled={history.past.length === 0}
           >
-            <Undo className="h-4 w-4" />
+            <Undo className="h-3.5 w-3.5" />
           </Button>
           <Button 
             variant="ghost" 
             size="icon" 
-            className="h-8 w-8" 
+            className="h-7 w-7 hover:bg-zinc-800 text-zinc-400" 
             onClick={() => dispatch(redo())}
             disabled={history.future.length === 0}
           >
-            <Redo className="h-4 w-4" />
+            <Redo className="h-3.5 w-3.5" />
           </Button>
         </div>
 
-        <Button variant="outline" size="sm" onClick={() => dispatch(setPreviewMode(!previewMode))}>
-          {previewMode ? <Edit3 className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
-          {previewMode ? "Edit" : "Preview"}
-        </Button>
+        <div className="flex items-center gap-2">
+           <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-8 text-xs text-zinc-400 hover:bg-zinc-800"
+            onClick={() => dispatch(setPreviewMode(!previewMode))}
+          >
+            {previewMode ? <Edit3 className="h-3.5 w-3.5 mr-2" /> : <Eye className="h-3.5 w-3.5 mr-2" />}
+            {previewMode ? "Edit" : "Preview"}
+          </Button>
 
-        <Button variant="outline" size="sm" onClick={onSave} disabled={isSaving}>
-          {isSaving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
-          Save
-        </Button>
-        
-        <Button size="sm" className="bg-primary hover:bg-primary/90 text-white">
-          <Share2 className="h-4 w-4 mr-2" />
-          Publish
-        </Button>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-8 text-xs text-zinc-400 hover:bg-zinc-800"
+            onClick={onSave} 
+            disabled={isSaving}
+          >
+            {isSaving ? <Loader2 className="h-3.5 w-3.5 mr-2 animate-spin" /> : <Save className="h-3.5 w-3.5 mr-2" />}
+            Save
+          </Button>
+          
+          <Button size="sm" className="h-8 text-xs bg-primary hover:bg-primary/90 text-white font-bold px-4">
+            <Share2 className="h-3.5 w-3.5 mr-2" />
+            Publish
+          </Button>
+        </div>
       </div>
     </nav>
   );

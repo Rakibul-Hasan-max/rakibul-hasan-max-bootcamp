@@ -16,6 +16,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { EditorElement } from "../../types";
+import { motion, AnimatePresence } from "framer-motion";
 
 export const LayersPanel = () => {
   const dispatch = useDispatch();
@@ -26,7 +27,7 @@ export const LayersPanel = () => {
   if (!root) return null;
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col">
       <LayerItem 
         element={root} 
         depth={0} 
@@ -62,6 +63,7 @@ const LayerItem = ({
       case "IMAGE": return <ImageIcon className="h-3 w-3" />;
       case "NAVBAR": return <Layout className="h-3 w-3" />;
       case "SECTION": return <Box className="h-3 w-3" />;
+      case "CARD": return <Box className="h-3 w-3" />;
       default: return <Box className="h-3 w-3" />;
     }
   };
@@ -70,10 +72,10 @@ const LayerItem = ({
     <div className="flex flex-col">
       <div 
         className={cn(
-          "flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer transition-colors group",
-          isSelected ? "bg-primary text-white" : "hover:bg-muted"
+          "flex items-center gap-2 px-2 py-1 cursor-pointer transition-colors group h-8",
+          isSelected ? "bg-zinc-800 text-zinc-100" : "hover:bg-zinc-900 text-zinc-500"
         )}
-        style={{ paddingLeft: `${depth * 12 + 8}px` }}
+        style={{ paddingLeft: `${depth * 10 + 8}px` }}
         onClick={() => onSelect(element.id)}
       >
         {hasChildren ? (
@@ -82,43 +84,54 @@ const LayerItem = ({
               e.stopPropagation();
               setIsOpen(!isOpen);
             }}
-            className="hover:bg-black/10 rounded"
+            className="hover:bg-white/5 rounded-sm p-0.5"
           >
-            {isOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+            {isOpen ? <ChevronDown className="h-3 w-3 opacity-40" /> : <ChevronRight className="h-3 w-3 opacity-40" />}
           </button>
         ) : (
-          <div className="w-3" />
+          <div className="w-4" />
         )}
-        {getIcon()}
-        <span className="text-[11px] font-medium truncate flex-1">{element.name}</span>
+        <div className={cn("transition-colors", isSelected ? "text-primary" : "text-zinc-600")}>
+          {getIcon()}
+        </div>
+        <span className="text-[10.5px] font-bold uppercase tracking-tight truncate flex-1">{element.name}</span>
         {element.id !== "__root" && (
-          <Trash2 
+          <button
             className={cn(
-              "h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity",
-              isSelected ? "text-white" : "text-muted-foreground hover:text-destructive"
+              "h-5 w-5 flex items-center justify-center rounded hover:bg-zinc-700 opacity-0 group-hover:opacity-100 transition-opacity",
+              isSelected ? "text-zinc-400" : "text-zinc-700"
             )} 
             onClick={(e) => {
               e.stopPropagation();
               onDelete(element.id);
             }}
-          />
+          >
+            <Trash2 className="h-3 w-3" />
+          </button>
         )}
       </div>
       
-      {isOpen && hasChildren && (
-        <div className="flex flex-col mt-1">
-          {element.children.map((child) => (
-            <LayerItem 
-              key={child.id} 
-              element={child} 
-              depth={depth + 1} 
-              selectedId={selectedId}
-              onSelect={onSelect}
-              onDelete={onDelete}
-            />
-          ))}
-        </div>
-      )}
+      <AnimatePresence>
+        {isOpen && hasChildren && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="flex flex-col overflow-hidden"
+          >
+            {element.children.map((child) => (
+              <LayerItem 
+                key={child.id} 
+                element={child} 
+                depth={depth + 1} 
+                selectedId={selectedId}
+                onSelect={onSelect}
+                onDelete={onDelete}
+              />
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

@@ -11,9 +11,13 @@ interface DraggableElementProps {
   className?: string;
 }
 
+import { useId } from "react";
+import { motion } from "framer-motion";
+
 export const DraggableElement = ({ type, name, icon, className }: DraggableElementProps) => {
+  const generatedId = useId();
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: `new-${type.toLowerCase()}-${Math.random()}`,
+    id: `new-${type.toLowerCase()}-${generatedId}`,
     data: {
       type,
       isNew: true,
@@ -22,20 +26,22 @@ export const DraggableElement = ({ type, name, icon, className }: DraggableEleme
   });
 
   return (
-    <div
+    <motion.div
       ref={setNodeRef}
       {...listeners}
       {...attributes}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.95 }}
       className={cn(
-        "flex flex-col items-center justify-center gap-2 rounded-xl border bg-muted/30 p-3 text-xs font-medium transition-all hover:bg-primary/5 hover:border-primary/30 cursor-grab active:cursor-grabbing",
-        isDragging && "opacity-50 ring-2 ring-primary",
+        "flex flex-col items-center justify-center gap-2 rounded-lg border border-zinc-800 bg-zinc-900/50 p-3 text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-zinc-100 cursor-grab active:cursor-grabbing",
+        isDragging && "opacity-50 ring-2 ring-primary border-primary",
         className
       )}
     >
-      <div className="text-muted-foreground group-hover:text-primary transition-colors">
+      <div className="text-zinc-500 group-hover:text-primary transition-colors">
         {icon}
       </div>
-      <span className="text-[10px] text-muted-foreground">{name}</span>
-    </div>
+      <span className="text-[10px] font-bold uppercase tracking-tight">{name}</span>
+    </motion.div>
   );
 };

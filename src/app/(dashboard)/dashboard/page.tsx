@@ -22,7 +22,7 @@ export default function DashboardPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight font-outfit">Welcome back, John</h1>
-          <p className="text-muted-foreground">Here's what's happening with your projects today.</p>
+          <p className="text-muted-foreground">Here&apos;s what&apos;s happening with your projects today.</p>
         </div>
         <Button className="rounded-lg shadow-lg shadow-primary/20" asChild>
           <Link href="/dashboard/projects/new">
