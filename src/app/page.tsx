@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Layers, Layout, Zap } from "lucide-react";
+import { ArrowRight, Layers, Layout, Zap, Check, Sparkles } from "lucide-react";
 
 export default function Home() {
   return (
@@ -28,12 +28,9 @@ export default function Home() {
       </header>
 
       <main className="flex-1">
+        {/* Hero */}
         <section className="relative overflow-hidden py-24 md:py-32">
           <div className="container relative z-10 mx-auto text-center">
-            <div className="inline-flex items-center rounded-full border bg-muted/50 px-3 py-1 text-sm font-medium mb-8">
-              <span className="flex h-2 w-2 rounded-full bg-primary mr-2"></span>
-              Now in Public Beta
-            </div>
             <h1 className="text-5xl md:text-7xl font-bold font-outfit tracking-tight mb-6 bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent">
               Build Stunning Websites <br /> Without Limits
             </h1>
@@ -57,6 +54,7 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Features */}
         <section id="features" className="py-24 bg-muted/50">
           <div className="container mx-auto">
             <div className="text-center mb-16">
@@ -94,6 +92,140 @@ export default function Home() {
                 </p>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Pricing */}
+        <section id="pricing" className="py-24 relative overflow-hidden">
+          {/* Background glow */}
+          <div className="absolute inset-0 -z-10 pointer-events-none">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl" />
+          </div>
+
+          <div className="container mx-auto">
+            {/* Heading */}
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold font-outfit tracking-tight mb-4">
+                Choose your plan
+              </h2>
+              <p className="text-muted-foreground max-w-xl mx-auto text-lg">
+                Start free, scale as you grow. No hidden fees, no surprises.
+              </p>
+            </div>
+
+            {/* Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch">
+
+              {/* Free */}
+              <div className="relative rounded-2xl border bg-background p-8 flex flex-col gap-6 hover:shadow-md transition-all duration-300">
+                <div>
+                  <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-2">Free</p>
+                  <div className="flex items-end gap-1 mb-1">
+                    <span className="text-5xl font-bold font-outfit">$0</span>
+                    <span className="text-muted-foreground mb-2">/month</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">Perfect for side projects &amp; experimenting.</p>
+                </div>
+                <Button variant="outline" size="lg" className="rounded-xl w-full" asChild>
+                  <Link href="/register">Get started free</Link>
+                </Button>
+                <ul className="flex flex-col gap-3 text-sm">
+                  {[
+                    "3 projects",
+                    "Drag & drop editor",
+                    "Community templates",
+                    "Dragify subdomain",
+                    "1 GB storage",
+                  ].map((f) => (
+                    <li key={f} className="flex items-center gap-3 text-muted-foreground">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-muted">
+                        <Check className="h-3 w-3 text-foreground" />
+                      </span>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Pro — highlighted */}
+              <div className="relative rounded-2xl border-2 border-primary bg-background p-8 flex flex-col gap-6 shadow-xl shadow-primary/10 scale-[1.03] hover:shadow-2xl hover:shadow-primary/20 transition-all duration-300">
+                {/* Popular badge */}
+                <span className="absolute -top-4 left-1/2 -translate-x-1/2 inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-1 text-xs font-bold text-primary-foreground shadow-lg whitespace-nowrap">
+                  Most Popular
+                </span>
+                <div>
+                  <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">Pro</p>
+                  <div className="flex items-end gap-1 mb-1">
+                    <span className="text-5xl font-bold font-outfit">$19</span>
+                    <span className="text-muted-foreground mb-2">/month</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">For freelancers &amp; growing businesses.</p>
+                </div>
+                <Button size="lg" className="rounded-xl w-full" asChild>
+                  <Link href="/register">
+                    Start Pro <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+                <ul className="flex flex-col gap-3 text-sm">
+                  {[
+                    "Unlimited projects",
+                    "Everything in Free",
+                    "Custom domain",
+                    "Premium templates",
+                    "50 GB storage",
+                    "Priority support",
+                    "Remove Dragify branding",
+                    "Advanced analytics",
+                  ].map((f) => (
+                    <li key={f} className="flex items-center gap-3 text-foreground">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                        <Check className="h-3 w-3 text-primary" />
+                      </span>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Business */}
+              <div className="relative rounded-2xl border bg-background p-8 flex flex-col gap-6 hover:shadow-md transition-all duration-300">
+                <div>
+                  <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-2">Business</p>
+                  <div className="flex items-end gap-1 mb-1">
+                    <span className="text-5xl font-bold font-outfit">$49</span>
+                    <span className="text-muted-foreground mb-2">/month</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">For agencies &amp; large teams at scale.</p>
+                </div>
+                <Button variant="outline" size="lg" className="rounded-xl w-full" asChild>
+                  <Link href="/register">Start Business</Link>
+                </Button>
+                <ul className="flex flex-col gap-3 text-sm">
+                  {[
+                    "Everything in Pro",
+                    "10 team members",
+                    "500 GB storage",
+                    "White-label solution",
+                    "API access",
+                    "Custom integrations",
+                    "SLA & dedicated support",
+                    "SSO / SAML login",
+                  ].map((f) => (
+                    <li key={f} className="flex items-center gap-3 text-muted-foreground">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-muted">
+                        <Check className="h-3 w-3 text-foreground" />
+                      </span>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* Bottom note */}
+            <p className="text-center text-sm text-muted-foreground mt-12">
+              All plans include a <strong className="text-foreground">14-day free trial</strong>. No credit card required.
+            </p>
           </div>
         </section>
       </main>
