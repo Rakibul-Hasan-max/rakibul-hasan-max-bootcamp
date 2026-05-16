@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { ProjectRepository } from "../repositories/project-repository";
 import { createProjectSchema, updateProjectSchema } from "../validations/project";
+import prisma from "@/lib/prisma";
 
 export async function getProjects() {
   const session = await auth();
@@ -14,17 +15,28 @@ export async function getProjects() {
 
 export async function createProject(values: any) {
   const session = await auth();
-  if (!session?.user?.id) return { error: "Unauthorized" };
+  if (!session?.user?.id) return { error: "Unauthorized. Please log in again." };
+
+  // Guard against stale JWT: verify the user actually exists in DB
+  const userExists = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { id: true },
+  });
+
+  if (!userExists) {
+    return { error: "Session expired. Please log out and register/log in again." };
+  }
 
   const validatedFields = createProjectSchema.safeParse(values);
   if (!validatedFields.success) return { error: "Invalid fields" };
 
   try {
     const project = await ProjectRepository.create(session.user.id, validatedFields.data);
-    revalidatePath("/dashboard/projects");
+    revalidatePath("/projects");
     return { success: "Project created", data: project };
   } catch (error) {
-    return { error: "Failed to create project" };
+    console.error("[CREATE_PROJECT_ERROR]", error);
+    return { error: "Failed to create project. Please try again." };
   }
 }
 
